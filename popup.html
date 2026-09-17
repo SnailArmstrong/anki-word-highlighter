@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #121214;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e4e4e7;
+    }
+    body {
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 320px;
+      max-width: 420px;
+      padding: 18px;
+      font-size: 15px;
+      max-height: 100vh;
+      overflow-y: auto;
+      position: relative;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 19px;
+      color: #60a5fa;
+    }
+    .status-box {
+      background: #18181b;
+      border: 1px solid #27272a;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-height: 32px;
+    }
+    .status-row:last-child {
+      margin-bottom: 0;
+    }
+    .val {
+      font-weight: bold;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #a1a1aa;
+      margin-bottom: 10px;
+      margin-top: 14px;
+    }
+
+    .row-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    select {
+      width: auto;
+      max-width: 170px;
+      padding: 9px 10px;
+      font-size: 14px;
+      border: 1px solid #3f3f46;
+      border-radius: 8px;
+      background-color: #27272a;
+      color: #f4f4f5;
+      outline: none;
+      box-sizing: border-box;
+    }
+    select:focus {
+      border-color: #60a5fa;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .switch.small {
+      width: 40px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #3f3f46;
+      transition: .2s;
+      border-radius: 28px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px; width: 22px;
+      left: 3px; bottom: 3px;
+      background-color: #f4f4f5;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    .switch.small .slider:before {
+      height: 18px; width: 18px;
+    }
+    input:checked + .slider { background-color: #2563eb; }
+    .switch:not(.small) input:checked + .slider:before { transform: translateX(20px); }
+    .switch.small input:checked + .slider:before { transform: translateX(16px); }
+
+    button.action-btn {
+      width: 100%;
+      color: white;
+      border: none;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, opacity 0.15s ease;
+      margin-top: 10px;
+      min-height: 46px;
+    }
+    #sync-btn { background-color: #3f3f46; }
+    #sync-btn:hover:not(:disabled) { background-color: #52525b; }
+    #open-settings-btn { background-color: #2563eb; }
+    #open-settings-btn:hover:not(:disabled) { background-color: #1d4ed8; }
+
+    button.action-btn:disabled {
+      background-color: #27272a !important;
+      color: #71717a !important;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    /* Small square button showing the current color -- opens the shared
+       bottom-sheet picker below rather than an inline dropdown, so it can
+       never overlap neighboring rows in the small popup panel. */
+    .swatch-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 2px solid #3f3f46;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .swatch-btn:focus {
+      outline: 2px solid #60a5fa;
+    }
+
+    /* Shared color-picker bottom sheet */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-backdrop[hidden] { display: none; }
+    .modal-sheet {
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 16px 16px 0 0;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-sizing: border-box;
+    }
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e4e4e7;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .modal-swatch-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .modal-swatch-option {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      border: 3px solid transparent;
+      cursor: pointer;
+      padding: 0;
+    }
+    .modal-swatch-option.active {
+      border-color: #f4f4f5;
+    }
+    .modal-close-btn {
+      width: 100%;
+      background: #27272a;
+      color: #e4e4e7;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 46px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Anki Spanish Sync</h3>
+
+  <div class="status-box">
+    <div class="status-row">
+      <span>Cached Words:</span>
+      <span id="word-count" class="val">0</span>
+    </div>
+    <div class="status-row">
+      <span>Status:</span>
+      <span id="sync-status" class="val" style="color: #4ade80;">Ready</span>
+    </div>
+  </div>
+
+  <div class="section-title">Configuration</div>
+  <div class="status-box">
+    <div class="status-row">
+      <span>Enable Annotation</span>
+      <label class="switch">
+        <input type="checkbox" id="highlight-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="status-row">
+      <span>Style Mode</span>
+      <select id="style-mode-select">
+        <option value="highlight">Highlight</option>
+        <option value="underline">Underline</option>
+        <option value="textcolor">Text Color</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section-title">Word Categories</div>
+  <div class="status-box">
+    <div class="status-row">
+      <span>Learning</span>
+      <div class="row-controls">
+        <label class="switch small"><input type="checkbox" id="learning-enabled-toggle"><span class="slider"></span></label>
+        <button type="button" class="swatch-btn" id="learning-swatch-btn" aria-label="Learning color"></button>
+      </div>
+    </div>
+    <div class="status-row">
+      <span>Mature</span>
+      <div class="row-controls">
+        <label class="switch small"><input type="checkbox" id="mature-enabled-toggle"><span class="slider"></span></label>
+        <button type="button" class="swatch-btn" id="mature-swatch-btn" aria-label="Mature color"></button>
+      </div>
+    </div>
+    <div class="status-row">
+      <span>Unknown</span>
+      <div class="row-controls">
+        <label class="switch small"><input type="checkbox" id="unknown-enabled-toggle"><span class="slider"></span></label>
+        <button type="button" class="swatch-btn" id="unknown-swatch-btn" aria-label="Unknown color"></button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="action-btn" id="sync-btn">Force Manual Sync</button>
+  <button type="button" class="action-btn" id="open-settings-btn">Open Deck & Dict Settings</button>
+
+  <!-- Shared color-picker bottom sheet, reused by all three swatch buttons -->
+  <div class="modal-backdrop" id="swatch-modal-backdrop" hidden>
+    <div class="modal-sheet">
+      <div class="modal-title" id="swatch-modal-title">Choose Color</div>
+      <div class="modal-swatch-row" id="swatch-modal-options"></div>
+      <button type="button" class="modal-close-btn" id="swatch-modal-close">Cancel</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
