@@ -1,31 +1,43 @@
 # AGENTS.md
 
 ## Project Overview
-This is a **Chrome browser extension** (Manifest V3) called "Anki Spanish Sync".
-It is NOT a web application — it has no server, no build step, and no package.json.
+A Spanish vocabulary highlighter for language learning. Originally a Chrome
+browser extension (Manifest V3), now being ported to a **Flutter Android app**.
 
-## What It Does
-- Syncs Spanish vocabulary from Anki via AnkiConnect (localhost:8765)
-- Highlights Spanish words on any web page by learning status (learning/mature/unknown)
-- Popup UI: annotation toggles, style mode, color pickers per category
-- Options page: deck/field selection, Yomitan dictionary import, suspended card handling
-- Content script: DOM tree-walker highlighter with MutationObserver for dynamic pages
-
-## Files
-- `manifest.json` — MV3 manifest (permissions: storage, activeTab; host: all URLs + localhost:8765)
+### Chrome Extension (original, in repo root)
+- `manifest.json` — MV3 manifest
 - `popup.html` / `popup.js` — extension popup UI
-- `options.html` / `options.js` — settings page (deck config, dictionary import)
-- `background.js` — service worker (AnkiConnect sync engine)
-- `content.js` — content script (page annotation highlighter)
-- `jszip_min.js` — JSZip for Yomitan dictionary ZIP import
+- `options.html` / `options.js` — settings page
+- `background.js` — service worker (AnkiConnect sync)
+- `content.js` — content script (page annotation)
+- `jszip_min.js` — JSZip for dictionary import
+
+### Flutter App (in `flutter_app/`)
+- `lib/main.dart` — entry point with Provider
+- `lib/app_model.dart` — central state (settings, word cache, sync)
+- `lib/theme.dart` — dark theme matching extension palette
+- `lib/services/word_utils.dart` — ported: extractSpanishWords, getWordVariants, lemma extraction
+- `lib/services/highlight_engine.dart` — ported: text tokenizer + word status highlighter
+- `lib/services/anki_sync_service.dart` — AnkiDroid sync (mock data for web preview)
+- `lib/services/dictionary_service.dart` — Yomitan .zip dictionary import
+- `lib/services/file_parser.dart` — EPUB/TXT file parsing
+- `lib/screens/home_screen.dart` — bottom nav (Sync, Reader, Settings)
+- `lib/screens/sync_tab.dart` — sync status & controls
+- `lib/screens/reader_tab.dart` — ebook/text reader with highlighting
+- `lib/screens/settings_tab.dart` — annotation config, colors, deck/field selection
+- `lib/widgets/highlighted_text.dart` — RichText with color-coded word spans
+- `lib/widgets/word_detail_sheet.dart` — bottom sheet for word details
 
 ## Running in Base44 Preview
-The extension cannot run as a web app. For preview purposes:
-- `docker-compose.base44.yml` serves the files via nginx on port 3000
-- `index.html` is a landing page linking to popup.html and options.html
-- `chrome-shim.js` mocks `chrome.storage`, `chrome.runtime`, `chrome.tabs` APIs so the UI is interactive outside the extension context
-- popup.html and options.html conditionally load the shim only when `chrome.storage` is unavailable (so the real extension is unaffected)
-- Full functionality requires loading as an unpacked extension in Chrome at `chrome://extensions`
+- `docker-compose.base44.yml` uses `ghcr.io/cirruslabs/flutter:latest`
+- Runs `flutter run -d web-server --web-port 3000 --web-hostname 0.0.0.0`
+- The Flutter web build is served on port 3000
+- AnkiDroid integration uses mock data on web (platform channel for Android)
+- The extension's static preview files (index.html, chrome-shim.js, nginx.conf) remain in the repo but are no longer served
+
+## Key Ports
+- Core logic ported from JS to Dart: extractSpanishWords, getWordVariants, extractLemmasFromEntry, extractLemmasFromDefinitions, highlight tokenization
+- AnkiDroid sync is stubbed with mock data; real implementation needs Android platform channel to com.ichi2.anki.FlashCardsProvider
 
 ## No External Secrets Required
-All data is local (chrome.storage, IndexedDB, AnkiConnect on localhost). No external API credentials needed.
+All data is local. No external API credentials needed.
