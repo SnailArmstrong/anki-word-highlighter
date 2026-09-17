@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anki Spanish Sync — Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #121214;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e4e4e7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .container { max-width: 600px; width: 100%; }
+    h1 { color: #60a5fa; font-size: 28px; margin-bottom: 8px; }
+    .tagline { color: #a1a1aa; font-size: 15px; margin-bottom: 32px; }
+    .info-box {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .info-box p { font-size: 14px; line-height: 1.6; color: #a1a1aa; }
+    .info-box strong { color: #e4e4e7; }
+    .cards { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 24px;
+      flex: 1;
+      min-width: 260px;
+      text-decoration: none;
+      color: #e4e4e7;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .card:hover { border-color: #60a5fa; transform: translateY(-2px); }
+    .card-icon { font-size: 32px; margin-bottom: 12px; }
+    .card h3 { font-size: 17px; color: #60a5fa; margin-bottom: 6px; }
+    .card p { font-size: 13px; color: #a1a1aa; line-height: 1.5; }
+    .note {
+      font-size: 13px;
+      color: #71717a;
+      line-height: 1.6;
+      padding: 16px;
+      background: rgba(96, 165, 250, 0.08);
+      border-radius: 8px;
+      border: 1px solid rgba(96, 165, 250, 0.15);
+    }
+    .note code {
+      background: #27272a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Anki Spanish Sync</h1>
+    <p class="tagline">Chrome Extension — Vocabulary Highlighter for Anki</p>
+
+    <div class="info-box">
+      <p>This is a <strong>Chrome browser extension</strong> (Manifest V3) that highlights Spanish vocabulary words on any web page based on your Anki learning status. It syncs with <strong>AnkiConnect</strong> (running locally on port 8765) and annotates words as <strong>Learning</strong>, <strong>Mature</strong>, or <strong>Unknown</strong>.</p>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="popup.html">
+        <div class="card-icon">🧩</div>
+        <h3>Popup UI</h3>
+        <p>Extension popup with annotation toggles, style mode, and color pickers for each word category.</p>
+      </a>
+      <a class="card" href="options.html">
+        <div class="card-icon">⚙️</div>
+        <h3>Settings Page</h3>
+        <p>Deck & field selection, Yomitan dictionary import, and suspended card handling.</p>
+      </a>
+    </div>
+
+    <div class="note">
+      <strong>Preview note:</strong> The UI is served statically with mock Chrome APIs so you can see and interact with the interface. Full functionality — AnkiConnect sync, content-script annotation, and <code>chrome.storage</code> persistence — requires loading this as an unpacked extension in Chrome at <code>chrome://extensions</code>.
+    </div>
+  </div>
+</body>
+</html>
