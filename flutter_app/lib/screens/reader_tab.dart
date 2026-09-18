@@ -34,15 +34,55 @@ Su amigo puede ayudar con la pronunciación. Él sabe que la práctica constante
 
     return Scaffold(
       appBar: AppBar(
+        leading: _content != null
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                tooltip: 'Close book',
+                onPressed: _closeBook,
+              )
+            : null,
         title: Text(_fileName ?? 'Reader'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.text_increase),
-            onPressed: () => setState(() => _fontSize = (_fontSize + 2).clamp(12.0, 32.0)),
-          ),
-          IconButton(
-            icon: const Icon(Icons.text_decrease),
-            onPressed: () => setState(() => _fontSize = (_fontSize - 2).clamp(12.0, 32.0)),
+          PopupMenuButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Reader settings',
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                enabled: false,
+                child: StatefulBuilder(
+                  builder: (context, setMenuState) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Font Size: ${_fontSize.toInt()}',
+                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.text_decrease),
+                              onPressed: () {
+                                setState(() => _fontSize =
+                                    (_fontSize - 2).clamp(12.0, 32.0));
+                                setMenuState(() {});
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.text_increase),
+                              onPressed: () {
+                                setState(() => _fontSize =
+                                    (_fontSize + 2).clamp(12.0, 32.0));
+                                setMenuState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -107,6 +147,13 @@ Su amigo puede ayudar con la pronunciación. Él sabe que la práctica constante
         );
       },
     );
+  }
+
+  void _closeBook() {
+    setState(() {
+      _content = null;
+      _fileName = null;
+    });
   }
 
   void _loadSample() {
