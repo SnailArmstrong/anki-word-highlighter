@@ -18,9 +18,7 @@ class SettingsTab extends StatelessWidget {
         children: [
           _SyncCategory(),
           _AnnotationCategory(),
-          _WordCategoryColors(),
           _AnkiDeckCategory(),
-          _SuspendedCardsCategory(),
           _DataCategory(),
         ],
       ),
@@ -180,22 +178,7 @@ class _AnnotationCategory extends StatelessWidget {
         _dropdownRow(context, 'Style Mode', model.annotationStyle,
             ['highlight', 'underline', 'textcolor'],
             (v) => model.setAnnotationStyle(v)),
-      ],
-    );
-  }
-}
-
-// ── Word Category Colors ───────────────────────────────────────────────────
-
-class _WordCategoryColors extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final model = context.watch<AppModel>();
-
-    return _ExpandableCard(
-      title: 'Word Categories',
-      icon: Icons.palette,
-      children: [
+        _divider(),
         _categoryRow(context, 'Learning', model.highlightLearningEnabled,
             model.colorLearning, 'learning', model),
         _divider(),
@@ -204,6 +187,21 @@ class _WordCategoryColors extends StatelessWidget {
         _divider(),
         _categoryRow(context, 'Unknown', model.highlightUnknownEnabled,
             model.colorUnknown, 'unknown', model),
+        _divider(),
+        _toggleRow(context, 'Use Suspended Override',
+            model.suspendedOverrideEnabled,
+            (v) =>
+                model.setSuspendedOverride(v, model.suspendedOverrideStatus)),
+        _divider(),
+        _dropdownRow(
+          context,
+          'Treat Suspended As',
+          model.suspendedOverrideStatus,
+          ['mature', 'learning', 'ignore'],
+          (v) =>
+              model.setSuspendedOverride(model.suspendedOverrideEnabled, v),
+          enabled: model.suspendedOverrideEnabled,
+        ),
       ],
     );
   }
@@ -225,36 +223,6 @@ class _AnkiDeckCategory extends StatelessWidget {
         _divider(),
         _dropdownRow(context, 'Target Field', model.selectedField,
             model.availableFields, (v) => model.setSelectedField(v)),
-      ],
-    );
-  }
-}
-
-// ── Suspended Card Handling ─────────────────────────────────────────────────
-
-class _SuspendedCardsCategory extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final model = context.watch<AppModel>();
-
-    return _ExpandableCard(
-      title: 'Suspended Cards',
-      icon: Icons.block,
-      children: [
-        _toggleRow(context, 'Use Suspended Override',
-            model.suspendedOverrideEnabled,
-            (v) =>
-                model.setSuspendedOverride(v, model.suspendedOverrideStatus)),
-        _divider(),
-        _dropdownRow(
-          context,
-          'Treat Suspended As',
-          model.suspendedOverrideStatus,
-          ['mature', 'learning', 'ignore'],
-          (v) =>
-              model.setSuspendedOverride(model.suspendedOverrideEnabled, v),
-          enabled: model.suspendedOverrideEnabled,
-        ),
       ],
     );
   }
