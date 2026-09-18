@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -137,7 +138,7 @@ Para ellos, es importante aprender el idioma antes del viaje.
       final file = result.files.first;
       if (file.bytes == null) return;
 
-      final content = String.fromCharCodes(file.bytes!);
+      final content = utf8.decode(file.bytes!);
       final cues = SubtitleParser.parse(content);
 
       setState(() {
