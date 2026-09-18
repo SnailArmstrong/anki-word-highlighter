@@ -21,8 +21,11 @@ browser extension (Manifest V3), now being ported to a **Flutter Android app**.
 - `lib/services/anki_sync_service.dart` — AnkiDroid sync (mock data for web preview)
 - `lib/services/dictionary_service.dart` — Yomitan .zip dictionary import
 - `lib/services/file_parser.dart` — EPUB/TXT file parsing
-- `lib/screens/home_screen.dart` — bottom nav (Reader, Settings)
+- `lib/services/subtitle_parser.dart` — SRT/VTT subtitle parsing into cues with timing
+- `lib/services/web_blob.dart` — conditional import for blob URL creation (web-only)
+- `lib/screens/home_screen.dart` — bottom nav (Reader, Video, Settings)
 - `lib/screens/reader_tab.dart` — ebook/text reader with highlighting
+- `lib/screens/video_tab.dart` — video player with SRT/VTT subtitle support and word highlighting
 - `lib/screens/settings_tab.dart` — all settings in expandable categories (sync, annotation, colors, deck, suspended cards, data management)
 - `lib/widgets/highlighted_text.dart` — RichText with color-coded word spans
 - `lib/widgets/word_detail_sheet.dart` — bottom sheet for word details

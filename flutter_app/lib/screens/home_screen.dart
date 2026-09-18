@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'reader_tab.dart';
+import 'video_tab.dart';
 import 'settings_tab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _screens = const [
     ReaderTab(),
+    VideoTab(),
     SettingsTab(),
   ];
 
@@ -32,6 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.menu_book_outlined),
             selectedIcon: Icon(Icons.menu_book),
             label: 'Reader',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.video_library_outlined),
+            selectedIcon: Icon(Icons.video_library),
+            label: 'Video',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
