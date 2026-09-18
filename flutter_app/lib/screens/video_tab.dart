@@ -84,7 +84,8 @@ Para ellos, es importante aprender el idioma antes del viaje.
   Future<void> _pickVideo() async {
     try {
       final result = await FilePicker.platform.pickFiles(
-        type: FileType.video,
+        type: FileType.custom,
+        allowedExtensions: ['mp4', 'mkv', 'webm', 'mov', 'ogg', 'ogv'],
         withData: true,
       );
       if (result == null || result.files.isEmpty) return;
@@ -445,6 +446,7 @@ Para ellos, es importante aprender el idioma antes del viaje.
     final ext = fileName.split('.').last.toLowerCase();
     return switch (ext) {
       'mp4' => 'video/mp4',
+      'mkv' => 'video/x-matroska',
       'webm' => 'video/webm',
       'ogg' || 'ogv' => 'video/ogg',
       'mov' => 'video/quicktime',
