@@ -6,7 +6,6 @@ file:///app/flutter_app/lib/main.dart
 file:///app/flutter_app/lib/screens/home_screen.dart
 file:///app/flutter_app/lib/screens/reader_tab.dart
 file:///app/flutter_app/lib/screens/settings_tab.dart
-file:///app/flutter_app/lib/screens/sync_tab.dart
 file:///app/flutter_app/lib/services/anki_sync_service.dart
 file:///app/flutter_app/lib/services/dictionary_service.dart
 file:///app/flutter_app/lib/services/file_parser.dart
