@@ -87,11 +87,6 @@ Su amigo puede ayudar con la pronunciación. Él sabe que la práctica constante
         ],
       ),
       body: _content == null ? _buildEmptyState(context) : _buildReader(model),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _openFile(context),
-        icon: const Icon(Icons.folder_open),
-        label: const Text('Open File'),
-      ),
     );
   }
 
